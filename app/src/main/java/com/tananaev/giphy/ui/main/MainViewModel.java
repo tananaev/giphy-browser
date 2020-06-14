@@ -13,8 +13,8 @@ import javax.inject.Inject;
 public class MainViewModel extends ViewModel {
 
     private static final PagedList.Config PAGING_CONFIG = new PagedList.Config.Builder()
-            .setPageSize(50)
-            .setPrefetchDistance(100)
+            .setPageSize(10)
+            .setPrefetchDistance(30)
             .setEnablePlaceholders(true)
             .build();
 

@@ -1,6 +1,8 @@
 package com.tananaev.giphy.model;
 
-public class Images {
+import java.io.Serializable;
+
+public class Images implements Serializable {
     public Image fixed_height;
     public Image preview_gif;
     public Image downsized;

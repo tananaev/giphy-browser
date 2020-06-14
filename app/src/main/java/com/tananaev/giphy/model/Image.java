@@ -1,6 +1,8 @@
 package com.tananaev.giphy.model;
 
-public class Image {
+import java.io.Serializable;
+
+public class Image implements Serializable {
     public String width;
     public String height;
     public String url;

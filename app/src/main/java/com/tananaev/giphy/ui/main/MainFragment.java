@@ -13,18 +13,20 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tananaev.giphy.R;
+import com.tananaev.giphy.model.Gif;
+import com.tananaev.giphy.ui.detail.DetailFragment;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements MainAdapter.ItemClickListener {
 
     private static final int COLUMNS = 2;
 
     private MainViewModel viewModel;
-    private MainAdapter adapter = new MainAdapter(COLUMNS);
+    private MainAdapter adapter = new MainAdapter(COLUMNS, this);
 
     @Inject
     MainViewModelFactory viewModelFactory;
@@ -54,5 +56,14 @@ public class MainFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         viewModel = new ViewModelProvider(this, viewModelFactory).get(MainViewModel.class);
         viewModel.fetchData(null).observe(this.getActivity(), adapter::submitList);
+    }
+
+    @Override
+    public void onClick(Gif gif) {
+        getParentFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, DetailFragment.newInstance(gif))
+                .addToBackStack("detail")
+                .commit();
     }
 }

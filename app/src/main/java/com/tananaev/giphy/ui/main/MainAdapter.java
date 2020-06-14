@@ -1,7 +1,6 @@
 package com.tananaev.giphy.ui.main;
 
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +28,14 @@ public class MainAdapter extends PagedListAdapter<Gif, MainAdapter.MainViewHolde
         }
     }
 
-    private final int columns;
+    public interface ItemClickListener {
+        void onClick(Gif gif);
+    }
 
-    protected MainAdapter(int columns) {
+    private final int columns;
+    private final ItemClickListener itemClickListener;
+
+    protected MainAdapter(int columns, ItemClickListener itemClickListener) {
         super(new DiffUtil.ItemCallback<Gif>() {
 
             @Override
@@ -45,6 +49,7 @@ public class MainAdapter extends PagedListAdapter<Gif, MainAdapter.MainViewHolde
             }
         });
         this.columns = columns;
+        this.itemClickListener = itemClickListener;
     }
 
     @NonNull
@@ -62,12 +67,11 @@ public class MainAdapter extends PagedListAdapter<Gif, MainAdapter.MainViewHolde
     @Override
     public void onBindViewHolder(@NonNull MainViewHolder holder, int position) {
         Gif gif = getItem(position);
-        if (gif != null) {
-            DraweeController controller = Fresco.newDraweeControllerBuilder()
-                    .setUri(Uri.parse(gif.images.fixed_height.url))
-                    .setAutoPlayAnimations(true)
-                    .build();
-            holder.imageView.setController(controller);
-        }
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(Uri.parse(gif.images.fixed_height.url))
+                .setAutoPlayAnimations(true)
+                .build();
+        holder.imageView.setController(controller);
+        holder.itemView.setOnClickListener(v -> itemClickListener.onClick(gif));
     }
 }

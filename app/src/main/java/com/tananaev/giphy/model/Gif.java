@@ -1,6 +1,8 @@
 package com.tananaev.giphy.model;
 
-public class Gif {
+import java.io.Serializable;
+
+public class Gif implements Serializable {
     public String id;
     public Images images;
 }
