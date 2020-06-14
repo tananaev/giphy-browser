@@ -4,16 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.tananaev.giphy.repo.MainRepository;
+import com.tananaev.giphy.repo.DataRepository;
 
 import javax.inject.Inject;
 
 public class MainViewModelFactory implements ViewModelProvider.Factory {
 
-    private MainRepository repository;
+    private DataRepository repository;
 
     @Inject
-    public MainViewModelFactory(MainRepository repository) {
+    public MainViewModelFactory(DataRepository repository) {
         this.repository = repository;
     }
 

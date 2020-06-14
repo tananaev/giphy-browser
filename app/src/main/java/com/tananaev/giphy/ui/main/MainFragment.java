@@ -9,8 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,7 +24,7 @@ public class MainFragment extends Fragment {
     private static final int COLUMNS = 2;
 
     private MainViewModel viewModel;
-    private PagedListAdapter adapter;
+    private MainAdapter adapter = new MainAdapter(COLUMNS);
 
     @Inject
     MainViewModelFactory viewModelFactory;
@@ -48,12 +46,13 @@ public class MainFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         RecyclerView gridView = view.findViewById(R.id.grid);
         gridView.setLayoutManager(new GridLayoutManager(getContext(), COLUMNS));
-
+        gridView.setAdapter(adapter);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         viewModel = new ViewModelProvider(this, viewModelFactory).get(MainViewModel.class);
+        viewModel.fetchData(null).observe(this.getActivity(), adapter::submitList);
     }
 }
