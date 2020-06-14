@@ -6,19 +6,19 @@ import androidx.paging.DataSource;
 import com.tananaev.giphy.model.Gif;
 import com.tananaev.giphy.service.GiphyService;
 
-import javax.inject.Inject;
-
 public class NetworkDataSourceFactory extends DataSource.Factory<Integer, Gif> {
 
     private GiphyService service;
+    private String query;
 
-    public NetworkDataSourceFactory(GiphyService service) {
+    public NetworkDataSourceFactory(GiphyService service, String query) {
         this.service = service;
+        this.query = query;
     }
 
     @NonNull
     @Override
     public DataSource create() {
-        return new NetworkDataSource(service);
+        return new NetworkDataSource(service, query);
     }
 }

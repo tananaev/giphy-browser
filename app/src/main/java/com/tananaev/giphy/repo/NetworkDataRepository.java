@@ -17,7 +17,7 @@ public class NetworkDataRepository implements DataRepository {
     }
 
     @Override
-    public DataSource.Factory<Integer, Gif> dataSourceFactory(String keyword) {
-        return new NetworkDataSourceFactory(service);
+    public DataSource.Factory<Integer, Gif> dataSourceFactory(String query) {
+        return new NetworkDataSourceFactory(service, query);
     }
 }

@@ -7,22 +7,30 @@ import com.tananaev.giphy.model.Gif;
 import com.tananaev.giphy.model.Response;
 import com.tananaev.giphy.service.GiphyService;
 
-import javax.inject.Inject;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 
 public class NetworkDataSource extends PositionalDataSource<Gif> {
 
     private GiphyService service;
+    private String query;
 
-    public NetworkDataSource(GiphyService service) {
+    public NetworkDataSource(GiphyService service, String query) {
         this.service = service;
+        this.query = query;
+    }
+
+    private Call<Response> fetch(int offset, int limit, String query) {
+        if (query == null || query.isEmpty()) {
+            return service.trending(offset, limit);
+        } else {
+            return service.search(offset, limit, query);
+        }
     }
 
     @Override
     public void loadInitial(@NonNull LoadInitialParams params, @NonNull LoadInitialCallback<Gif> callback) {
-        service.trending(params.requestedStartPosition, params.requestedLoadSize).enqueue(new Callback<Response>() {
+        fetch(params.requestedStartPosition, params.requestedLoadSize, query).enqueue(new Callback<Response>() {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 if (response.isSuccessful()) {
@@ -42,7 +50,7 @@ public class NetworkDataSource extends PositionalDataSource<Gif> {
 
     @Override
     public void loadRange(@NonNull LoadRangeParams params, @NonNull LoadRangeCallback<Gif> callback) {
-        service.trending(params.startPosition, params.loadSize).enqueue(new Callback<Response>() {
+        fetch(params.startPosition, params.loadSize, query).enqueue(new Callback<Response>() {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 if (response.isSuccessful()) {
