@@ -56,7 +56,7 @@ public class MainFragment extends Fragment implements MainAdapter.ItemClickListe
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         RecyclerView gridView = view.findViewById(R.id.grid);
-        gridView.setLayoutManager(new GridLayoutManager(getContext(), COLUMNS));
+        gridView.setLayoutManager(new NpaGridLayoutManager(getContext(), COLUMNS));
         gridView.setAdapter(adapter);
     }
 
@@ -64,7 +64,11 @@ public class MainFragment extends Fragment implements MainAdapter.ItemClickListe
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         viewModel = new ViewModelProvider(this, viewModelFactory).get(MainViewModel.class);
-        viewModel.fetchData(null).observe(getActivity(), adapter::submitList);
+        fetchData(null);
+    }
+
+    private void fetchData(String query) {
+        viewModel.fetchData(query).observe(getActivity(), adapter::submitList);
     }
 
     @Override
@@ -72,15 +76,20 @@ public class MainFragment extends Fragment implements MainAdapter.ItemClickListe
         inflater.inflate(R.menu.main, menu);
 
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setIconifiedByDefault(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                viewModel.fetchData(query).observe(getActivity(), adapter::submitList);
+                fetchData(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    fetchData(null);
+                    return true;
+                }
                 return false;
             }
         });

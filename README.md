@@ -18,5 +18,3 @@ Limitations:
 - Ideally add database for local storage
 - There is no error handling for now; would need to propagate errors from data source all the way to UI
 - Main fragment doesn't save state, so when you come back from details it resets
-- Need to click twice of search icon to get to the search field
-- Search field clearing doesn't work correctly
